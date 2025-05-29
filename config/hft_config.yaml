@@ -1,0 +1,291 @@
+# HFT Bot Configuration File
+# Main configuration for the Hybrid Retail HFT Trading Bot
+
+# Trading Parameters
+trading:
+  # Basic trading settings
+  default_lot_size: 0.01
+  max_lot_size: 1.0
+  magic_number: 123456
+  max_positions: 10
+  max_positions_per_symbol: 3
+  
+  # Risk management
+  max_risk_per_trade: 2.0  # Percentage of equity
+  max_daily_loss: 1000.0   # USD
+  max_drawdown: 5.0        # Percentage
+  stop_loss_points: 100
+  take_profit_points: 150
+  
+  # Trading frequency limits
+  max_trades_per_minute: 100
+  max_trades_per_hour: 5000
+  max_trades_per_day: 50000
+  
+  # Symbols to trade
+  symbols:
+    - EURUSD
+    - GBPUSD
+    - USDJPY
+    - AUDUSD
+    - USDCAD
+
+# AI/ML Configuration
+ai:
+  # Model settings
+  model_type: "lstm"  # Options: lstm, transformer
+  model_path: "models/hft_model.onnx"
+  scaler_path: "models/hft_scaler.pkl"
+  
+  # Training parameters
+  sequence_length: 50
+  hidden_size: 128
+  num_layers: 2
+  dropout: 0.2
+  learning_rate: 0.001
+  batch_size: 64
+  epochs: 100
+  patience: 10
+  
+  # Prediction settings
+  confidence_threshold: 0.7
+  prediction_horizon: 5
+  use_ai_predictions: true
+  
+  # Feature engineering
+  feature_windows:
+    momentum: [5, 10, 20]
+    volatility: [10, 20, 50]
+    volume: [5, 10, 20]
+  
+  # Model retraining
+  retrain_frequency: 24  # hours
+  min_samples_retrain: 10000
+
+# Data Configuration
+data:
+  # Data sources
+  primary_source: "mt5"
+  external_sources:
+    - "dukascopy"
+    - "databento"
+  
+  # Data quality
+  min_data_quality: 99.0  # Percentage
+  max_missing_ticks: 10   # Per minute
+  
+  # Historical data
+  history_days: 30
+  tick_storage_days: 7
+  
+  # Real-time data
+  tick_buffer_size: 10000
+  feature_buffer_size: 1000
+  
+  # Data cleaning
+  outlier_threshold: 5.0  # Standard deviations
+  spike_detection: true
+  gap_filling: true
+
+# Communication Configuration
+communication:
+  # ZeroMQ settings
+  zmq:
+    data_port: 5555
+    signal_port: 5556
+    monitoring_port: 5557
+    bind_address: "tcp://*"
+    connect_address: "tcp://localhost"
+    
+  # Socket settings
+  high_water_mark: 10000
+  linger_time: 1000
+  reconnect_interval: 5000
+  
+  # Message formats
+  compression: true
+  serialization: "json"  # Options: json, msgpack, pickle
+
+# Infrastructure Configuration
+infrastructure:
+  # VPS specifications
+  vps:
+    cpu_cores: 8
+    ram_gb: 32
+    storage_gb: 500
+    network_speed: "10Gbps"
+    location: "NY4"  # Equinix data center
+    
+  # Performance optimization
+  optimization:
+    cpu_affinity: true
+    memory_mapping: true
+    kernel_bypass: false  # Requires special hardware
+    
+  # Monitoring
+  monitoring:
+    enable_profiling: true
+    log_level: "INFO"
+    metrics_interval: 1  # seconds
+    
+# Risk Management Configuration
+risk:
+  # Position limits
+  position_limits:
+    max_position_size: 1.0
+    max_total_exposure: 10.0
+    max_correlation: 0.8
+    
+  # Loss limits
+  loss_limits:
+    max_daily_loss: 1000.0
+    max_position_loss: 100.0
+    max_drawdown_pct: 5.0
+    
+  # Performance limits
+  performance_limits:
+    max_latency_ms: 100.0
+    min_sharpe_ratio: 0.5
+    max_portfolio_volatility: 0.02
+    
+  # Emergency controls
+  emergency:
+    enable_kill_switch: true
+    auto_shutdown_conditions:
+      - "max_drawdown_exceeded"
+      - "daily_loss_exceeded"
+      - "system_error"
+    
+  # Monitoring
+  monitoring:
+    volatility_window: 100
+    correlation_window: 100
+    latency_window: 1000
+
+# Broker Configuration
+broker:
+  # Broker selection criteria
+  selection:
+    regulation: "FCA"  # Preferred regulation
+    execution_speed: 50  # Max milliseconds
+    spread_type: "raw"
+    commission_per_lot: 3.0  # USD
+    
+  # Supported brokers (in order of preference)
+  supported:
+    - name: "IC Markets"
+      account_type: "Raw Spread"
+      server: "ICMarkets-Demo"
+      
+    - name: "Pepperstone"
+      account_type: "Razor"
+      server: "Pepperstone-Demo"
+      
+    - name: "FXCM"
+      account_type: "Active Trader"
+      server: "FXCM-Demo"
+  
+  # Connection settings
+  connection:
+    timeout: 30000  # milliseconds
+    retry_attempts: 3
+    retry_delay: 5000  # milliseconds
+
+# Monitoring and Alerting
+monitoring:
+  # Dashboard settings
+  dashboard:
+    host: "0.0.0.0"
+    port: 12000
+    update_interval: 1000  # milliseconds
+    
+  # Logging
+  logging:
+    level: "INFO"
+    file_path: "logs/hft_bot.log"
+    max_file_size: "100MB"
+    backup_count: 10
+    
+  # Alerts
+  alerts:
+    email:
+      enabled: true
+      smtp_server: "smtp.gmail.com"
+      smtp_port: 587
+      
+    telegram:
+      enabled: true
+      bot_token: ""  # Set via environment variable
+      chat_id: ""    # Set via environment variable
+      
+    webhook:
+      enabled: false
+      url: ""
+      
+  # Performance tracking
+  performance:
+    track_latency: true
+    track_slippage: true
+    track_fill_rates: true
+    
+# Backtesting Configuration
+backtesting:
+  # Data settings
+  data_quality: 99  # Minimum modeling quality
+  start_date: "2023-01-01"
+  end_date: "2023-12-31"
+  
+  # Execution simulation
+  slippage:
+    model: "dynamic"  # Options: fixed, dynamic, realistic
+    base_slippage: 0.1  # pips
+    volatility_multiplier: 2.0
+    
+  # Costs
+  costs:
+    commission_per_lot: 3.0  # USD
+    swap_rates: true
+    
+  # Optimization
+  optimization:
+    method: "walk_forward"
+    train_period: 6  # months
+    test_period: 1   # month
+    step_size: 1     # month
+
+# Security Configuration
+security:
+  # API security
+  api:
+    rate_limiting: true
+    max_requests_per_minute: 1000
+    
+  # Data encryption
+  encryption:
+    enable_tls: true
+    certificate_path: "certs/server.crt"
+    private_key_path: "certs/server.key"
+    
+  # Access control
+  access:
+    allowed_ips: []  # Empty means all IPs allowed
+    require_authentication: false
+
+# Development and Testing
+development:
+  # Debug settings
+  debug:
+    enable_debug_mode: false
+    log_all_ticks: false
+    simulate_latency: false
+    
+  # Testing
+  testing:
+    enable_paper_trading: true
+    demo_account: true
+    test_data_path: "data/test/"
+    
+  # Profiling
+  profiling:
+    enable_profiler: false
+    profile_output: "profiles/"
